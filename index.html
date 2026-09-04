@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIESEC in Blida — Zenithers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #037EF3;
+    --blue-deep: #1B2A6B;
+    --mauve: #4B1F72;
+    --fire-orange: #ff1a81;
+    --fire-red: #e82b57;
+    --ink: #F4F6FB;
+    --ink-dim: rgba(244,246,251,0.7);
+    --card-bg: rgba(255,255,255,0.07);
+    --card-border: rgba(255,255,255,0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: 'Manrope', sans-serif;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  body {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--blue-deep), var(--blue), var(--mauve), var(--blue-deep));
+    background-size: 300% 300%;
+    animation: drift 18s ease-in-out infinite;
+  }
+
+  @keyframes drift {
+    0%   { background-position: 0% 30%; }
+    50%  { background-position: 100% 70%; }
+    100% { background-position: 0% 30%; }
+  }
+
+  canvas#embers {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 460px;
+    padding: 56px 24px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .frame {
+    position: relative;
+    width: 148px;
+    height: 148px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 26px;
+  }
+
+  .frame::before {
+    content: "";
+    position: absolute;
+    inset: -14px;
+    background: conic-gradient(from 0deg, var(--fire-orange), var(--fire-red), var(--blue), var(--fire-orange));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    filter: blur(14px);
+    opacity: 0.65;
+    animation: glow 3.6s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.45; transform: scale(0.97); }
+    50%      { opacity: 0.8; transform: scale(1.04); }
+  }
+
+  .frame img, .frame .placeholder {
+    position: relative;
+    width: 132px;
+    height: 132px;
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    border: 2px solid rgba(255,255,255,0.5);
+    background: linear-gradient(160deg, #123, #234);
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 7vw, 2.5rem);
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--fire-orange);
+    letter-spacing: 0.02em;
+    margin: 0 0 22px;
+  }
+
+  .slogan {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin: 0 0 40px;
+    min-height: 1.6em;
+  }
+
+  .slogan .fire {
+    display: inline-block;
+    animation: flicker 1.8s ease-in-out infinite;
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    30%      { transform: scale(1.12) rotate(-4deg); }
+    60%      { transform: scale(0.95) rotate(3deg); }
+  }
+
+  .links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .link-btn {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise 0.5s ease forwards;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: left;
+    overflow: hidden;
+    transition: border-color 0.25s ease, transform 0.15s ease;
+  }
+
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .link-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--fire-orange), var(--fire-red));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: -1;
+  }
+
+  .link-btn:hover, .link-btn:focus-visible {
+    border-color: var(--fire-orange);
+    transform: translateY(-2px);
+  }
+
+  .link-btn:hover::after, .link-btn:focus-visible::after {
+    opacity: 0.16;
+  }
+
+  .link-btn:active {
+    transform: scale(0.97);
+  }
+
+  .icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+  }
+
+  footer {
+    margin-top: 48px;
+    font-size: 0.8rem;
+    color: var(--ink-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+    .frame::before { animation: none; opacity: 0.6; }
+    .slogan .fire { animation: none; }
+    .link-btn { animation: none; opacity: 1; transform: none; }
+    canvas#embers { display: none; }
+  }
+  .modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 12, 30, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  position: relative;
+  max-width: 340px;
+  padding: 32px 26px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(27,42,107,0.95), rgba(75,31,114,0.95));
+  border: 1px solid rgba(255,255,255,0.16);
+  text-align: left;
+}
+
+.modal-year {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--fire-orange);
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+
+.modal-card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  margin: 0 0 12px;
+}
+
+.modal-card p:last-child {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--ink);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+
+<canvas id="embers"></canvas>
+<div id="about-modal" class="modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="document.getElementById('about-modal').classList.remove('open')">×</button>
+    <p class="modal-year">Depuis 2014</p>
+    <h2>Zenith Tribe</h2>
+    <p>60+ membres actifs, portés par une mission : développer le leadership des jeunes à Blida à travers l'échange interculturel et l'engagement.</p>
+  </div>
+</div>
+<main>
+  <div class="frame">
+    <img src="AIESEC-Human-White.png" alt="Équipe Zenithers">
+  </div>
+
+  <h1>AIESEC in Blida</h1>
+  <p class="subtitle">Zenithers</p>
+  <p class="slogan" id="slogan"></p>
+
+  <nav class="links">
+    <a class="link-btn" style="animation-delay:.05s" href="https://aiesec.org" target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+      Site AIESEC
+    </a>
+    <a class="link-btn" style="animation-delay:.15s" href="https://www.instagram.com/lc.blida?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      Instagram
+    </a>
+    <a class="link-btn" style="animation-delay:.25s" href="https://facebook.com" target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9h3V6h-3a4 4 0 0 0-4 4v2H7v3h3v6h3v-6h3l1-3h-4v-2a1 1 0 0 1 1-1z"/></svg>
+      Facebook
+    </a>
+    <a class="link-btn" style="animation-delay:.35s" href="https://www.linkedin.com/company/aiesec-algeria/ " target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 13v4"/></svg>
+      LinkedIn
+    </a>
+    <a  class="link-btn" style="animation-delay:.45s" onclick="document.getElementById('about-modal').classList.add('open')">
+       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        About Zenithers
+    </a>
+  </nav>
+
+  <footer>AIESEC in Blida · AIESEC in Algeria
+</main>
+
+<script>
+  // Slogan letter-by-letter reveal, once, on load
+  const text = "We play dangerously ";
+  const el = document.getElementById('slogan');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    el.innerHTML = text + '<span class="fire">🔥</span>';
+  } else {
+    let i = 0;
+    function typeNext() {
+      if (i < text.length) {
+        el.textContent += text[i];
+        i++;
+        setTimeout(typeNext, 45);
+      } else {
+        const fire = document.createElement('span');
+        fire.className = 'fire';
+        fire.textContent = '🔥';
+        el.appendChild(fire);
+      }
+    }
+    typeNext();
+  }
+
+  // Ember particles
+  if (!reduceMotion) {
+    const canvas = document.getElementById('embers');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function makeParticle() {
+      return {
+        x: Math.random() * w,
+        y: h + 10,
+        r: Math.random() * 2 + 1,
+        speed: Math.random() * 0.6 + 0.3,
+        drift: (Math.random() - 0.5) * 0.4,
+        life: Math.random() * 0.6 + 0.4,
+        color: Math.random() > 0.5 ? '255,106,26' : '232,52,43'
+      };
+    }
+
+    particles = Array.from({ length: 40 }, () => {
+      const p = makeParticle();
+      p.y = Math.random() * h;
+      return p;
+    });
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.y -= p.speed;
+        p.x += p.drift;
+        p.life -= 0.0025;
+        if (p.y < -10 || p.life <= 0) Object.assign(p, makeParticle());
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color},${Math.max(p.life, 0) * 0.6})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+</script>
+
+</body>
+</html>
